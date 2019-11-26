@@ -2,6 +2,10 @@
 
 This is a step-by-step tutorial of running AutoGluon using SageMaker Estimator. We assume you are already familiar with AWS SageMaker. Otherwise, please refer to the tutorial of AutoGluon Distributed Training on dedicated machines.
 
+```bash
+git clone https://github.com/zhanghang1989/AutoGluon-Docker --recursive
+```
+
 ## Built Docker and Push It onto ECR
 
 ```bash

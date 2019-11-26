@@ -22,6 +22,17 @@ ARG DLAMI_REGISTRY_ID=763104351884
 # Registry ID from: https://docs.aws.amazon.com/dlami/latest/devguide/deep-learning-containers-images.html
 FROM ${DLAMI_REGISTRY_ID}.dkr.ecr.${REGION}.amazonaws.com/mxnet-training:1.4.1-${CONTEXT}-ubuntu16.04
 
+# Install OpenSSH for MPI to communicate between containers
+RUN apt-get install -y --no-install-recommends openssh-client openssh-server
+RUN mkdir -p /var/run/sshd && \
+  sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+RUN rm -rf /root/.ssh/ && \
+  mkdir -p /root/.ssh/ && \
+  ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa && \
+  cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys && \
+  printf "Host *\n  StrictHostKeyChecking no\n" >> /root/.ssh/config
+
 # Install dependencies, ordering from general to specific.
 # Copy this specific `requirements.txt` file first, and defer copying the
 # entire directory to last.

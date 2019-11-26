@@ -16,16 +16,13 @@ def train(args):
     dist_ip_addrs = []
     if is_distributed:
         host_rank = args.hosts.index(args.current_host)
+        ag.sagemaker_setup()
         if host_rank > 0:
-            # TODO, need to synchronize
-            time.sleep(1000)
             print('Host rank {} exit.'.format(host_rank))
             return
-        else:
-            dist_ip_addrs = args.hosts
-            dist_ip_addrs.pop(host_rank)
-            # TODO, need to synchronize
-            time.sleep(100)
+
+    dist_ip_addrs = args.hosts
+    dist_ip_addrs.pop(host_rank)
     dataset = task.Dataset(os.path.join(args.data_dir, 'train'))
     ngpus_per_trial = 1 if args.num_gpus > 0 else 0
 
