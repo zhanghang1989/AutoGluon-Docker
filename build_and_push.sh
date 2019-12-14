@@ -21,33 +21,41 @@ then
     exit 255
 fi
 
-
 # Get the region defined in the current configuration (default to us-west-2 if none defined)
 region=$(aws configure get region)
 region=${region:-us-west-2}
 
 
-fullname="${account}.dkr.ecr.${region}.amazonaws.com/${image}:latest"
+#fullname="${account}.dkr.ecr.${region}.amazonaws.com/${image}:latest"
+ECR_URL="${account}.dkr.ecr.${region}.amazonaws.com"
 
-# If the repository doesn't exist in ECR, create it.
 
-aws ecr describe-repositories --repository-names "${image}" > /dev/null 2>&1
-
-if [ $? -ne 0 ]
-then
-    aws ecr create-repository --repository-name "${image}" > /dev/null
-fi
+DLAMI_REGISTRY_ID=763104351884
 
 # Get the login command from ECR and execute it directly
 $(aws ecr get-login --region ${region} --no-include-email)
 
-# Get the login command from ECR in order to pull down the SageMaker PyTorch image
-$(aws ecr get-login --registry-ids 520713654638 --region ${region} --no-include-email)
+# Get the login command from ECR in order to pull down the SageMaker MXNet image
+$(aws ecr get-login --registry-ids ${DLAMI_REGISTRY_ID} --region ${region} --no-include-email)
 
 # Build the docker image locally with the image name and then push it to ECR
 # with the full name.
 
-docker build  -t ${image} . --build-arg REGION=${region}
-docker tag ${image} ${fullname}
-
-docker push ${fullname}
+for context in "cpu-py36" "gpu-py36-cu100"
+do
+    image_name=${image}-${context}
+    # If the repository doesn't exist in ECR, create it.
+    aws ecr describe-repositories --repository-names "${image_name}" > /dev/null 2>&1
+    if [ $? -ne 0 ]
+    then
+        aws ecr create-repository --repository-name "${image_name}" > /dev/null
+    fi
+    # build the image
+    docker build -t ${image_name} . \
+                 --build-arg REGION=${region} \
+                 --build-arg DLAMI_REGISTRY_ID=${DLAMI_REGISTRY_ID} \
+                 --build-arg CONTEXT=${context}
+    # tag and push
+    docker tag ${image_name} ${ECR_URL}/${image_name}
+    docker push ${ECR_URL}/${image_name}
+done

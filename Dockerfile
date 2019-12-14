@@ -13,7 +13,7 @@
 
 # For more information on creating a Dockerfile
 # https://docs.docker.com/compose/gettingstarted/#step-2-create-a-dockerfile
-# https://github.com/awslabs/amazon-sagemaker-examples/master/advanced_functionality/pytorch_extending_our_containers/pytorch_extending_our_containers.ipynb
+# https://github.com/awslabs/amazon-sagemaker-examples/
 ARG REGION=us-west-2
 ARG CONTEXT=cpu-py36
 ARG DLAMI_REGISTRY_ID=763104351884
