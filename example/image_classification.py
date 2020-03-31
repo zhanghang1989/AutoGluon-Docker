@@ -31,7 +31,7 @@ def train(args):
                           ngpus_per_trial=ngpus_per_trial,
                           verbose=True,
                           dist_ip_addrs=dist_ip_addrs,
-                          checkpoint=os.path.join(args.model_dir, 'exp1.ag'))
+                          output_directory=args.model_dir)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
