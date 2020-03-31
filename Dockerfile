@@ -49,7 +49,8 @@ RUN	python -m spacy download en
 # build times by maximally utilizing the build cache. All dependencies
 # should be centralized in `requirements.txt` above.
 COPY autogluon autogluon/
-RUN python -m pip install --no-deps -e autogluon/
+# RUN python -m pip install --no-deps -e autogluon/
+RUN python -m pip install -e autogluon/
 
 ENV PATH="/opt/ml/code:${PATH}"
 
