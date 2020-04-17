@@ -28,6 +28,7 @@ def train(args):
 
     classifier = task.fit(dataset,
                           epochs=args.epochs,
+                          num_trials=args.num_trials,
                           ngpus_per_trial=ngpus_per_trial,
                           verbose=True,
                           dist_ip_addrs=dist_ip_addrs,
@@ -40,6 +41,8 @@ if __name__ == '__main__':
     # https://github.com/aws/sagemaker-containers#how-a-script-is-executed-inside-the-container
     parser.add_argument('--epochs', type=int, default=2, metavar='E',
                         help='number of total epochs to run (default: 2)')
+    parser.add_argument('--num-trials', type=int, default=2, metavar='E',
+                        help='number of total trials to run (default: 2)')
     parser.add_argument('--hosts', type=str, default=ast.literal_eval(os.environ['SM_HOSTS']))
     parser.add_argument('--current-host', type=str, default=os.environ['SM_CURRENT_HOST'])
     parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
