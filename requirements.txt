@@ -1,6 +1,6 @@
-numpy~=1.16.0
-scipy~=1.3.0
-spacy~=2.1
+numpy>=1.16.0
+scipy>=1.3.0
+spacy>=2.1
 
 gluoncv
 # explicit req of autogluon
@@ -10,8 +10,8 @@ scikit-optimize
 # explicit req of autogluon
 ConfigSpace==0.4.10
 
-boto3~=1.9
-awscli~=1.16
+boto3
+awscli
 
 requests
 nose
@@ -19,14 +19,6 @@ nose
 matplotlib
 seaborn
 jupyter
-
-### AutoGluon DistributedScheduler remote workers ###
-dask[complete]==2.6
-paramiko~=2.4
-distributed==2.6
-tornado
-# required to avoid serialization issue
-msgpack<1.0
 
 ## tabular prediction ##
 tqdm
